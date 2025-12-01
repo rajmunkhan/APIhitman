@@ -50,4 +50,41 @@ Public-facing microservice that accepts the user's request.
   "message": 200,
   "concurrency": 10
 }
+```
+
+## 2. URLconsume
+
+Backend worker microservice that processes queued requests.
+
+### Responsibilities
+
+- Consumes messages from Kafka topic `hitURL`
+- Executes actual HTTP requests
+- Performs calls using the provided concurrency level
+- Collects and logs metrics:
+  - success count
+  - failure count
+  - average latency
+
+---
+
+## 📡 Workflow
+
+1. Client sends payload to `/v1/hit`
+2. APIservice pushes the request to Kafka
+3. URLconsume reads the message
+4. URLconsume hits the target URL according to:
+   - total hits (`message`)
+   - parallelism (`concurrency`)
+5. Metrics are computed and logged
+
+---
+
+## 🛠️ Tech Stack
+
+- Java 17+
+- Spring Boot
+- Apache Kafka
+- RestTemplate / WebClient
+- Maven
 
